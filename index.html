@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>book_store</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<script src="../../js/vue.js"></script>
+	<script src="index.js"></script>
+	<body>
+		<div id="app">
+			<div v-if="books.length">
+				<table>
+					<th></th>
+					<th>书籍名称</th>
+					<th>购买日期</th>
+					<th>价格</th>
+					<th>购买数量</th>
+					<th>操作</th>
+					<tbody>
+						<tr v-for="(item,index) in books">
+							<td>{{item.id}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.date}}</td>
+							<td>
+								{{item.price | showFullPrice}}
+							</td>
+							<td>
+								<button @click="subCount(index)">-</button>
+								{{item.count}}
+								<button @click="addCount(index)">+</button>
+							</td>
+							<td>
+								<button @click="removeBook(index)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div>总价格：{{totalPrice | showFullPrice}}</div>
+			</div>
+			<div v-else>购物车为0</div>
+		</div>
+
+		<script>
+			var vue = new Vue({
+				el: "#app",
+				data: {
+					books: [{
+							id: 1,
+							name: "DOM编程艺术",
+							date: "2020-02-03",
+							price: 33.00,
+							count: 2
+						},
+						{
+							id: 1,
+							name: "DOM编程艺术",
+							date: "2020-02-03",
+							price: 33.00,
+							count: 2
+						},
+						{
+							id: 1,
+							name: "DOM编程艺术",
+							date: "2020-02-03",
+							price: 33.00,
+							count: 2
+						}
+					]
+
+				},
+				filters: { //过滤器
+					showFullPrice(price) {
+						return "￥" + price.toFixed(2) //保留两位小数
+					}
+				},
+				methods: {
+					subCount(index) {
+						if (this.books[index].count != 0) {
+							this.books[index].count--;
+						};
+					},
+					addCount(index) {
+						this.books[index].count++;
+					},
+					removeBook(index) {
+						this.books.splice(index, 1)
+					}
+
+				},
+				computed:{
+					totalPrice(){
+						let totalPrice = 0.00;
+						for(let i=0; i<this.books.length; i++){
+							totalPrice = totalPrice + this.books[i].price*this.books[i].count
+						};
+						return totalPrice;
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
